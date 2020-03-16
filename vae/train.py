@@ -25,17 +25,16 @@ def test():
     encoder = Darknet19Encoder(inputShape, latentSize=latentSize, latentConstraints='bvae', beta=69)
     decoder = Darknet19Decoder(inputShape, latentSize=latentSize)
     bvae = AutoEncoder(encoder, decoder)
-    bvae.ae.compile(optimizer='adam', loss='mean_absolute_error')
-    while True:
-        bvae.ae.fit(img, img,
-                    epochs=100,
-                    batch_size=batchSize)
-        latentVec = bvae.encoder.predict(img)[0]
-        pred = bvae.ae.predict(img)
-        pred = np.uint8((pred + 1)* 255/2)
-        pred = Image.fromarray(pred[0])
-        pred.save("reconstruced_image.png")
-        pred.show()
+    bvae.ae.compile(optimizer='adam', loss='mse')
+    bvae.ae.fit(img, img,
+                epochs=10000,
+                batch_size=batchSize)
+    latentVec = bvae.encoder.predict(img)[0]
+    pred = bvae.ae.predict(img)
+    pred = np.uint8((pred + 1)* 255/2)
+    pred = Image.fromarray(pred[0])
+    pred.save("reconstruced_image.png")
+    pred.show()
 
 if __name__ == "__main__":
     test()
