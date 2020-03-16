@@ -2,7 +2,7 @@ import tensorflow as tf
 from tensorflow.python.keras import Input
 from tensorflow.python.keras.layers import (InputLayer, Conv2D, Conv2DTranspose,
             BatchNormalization, LeakyReLU, MaxPool2D, UpSampling2D,
-            Reshape, GlobalAveragePooling2D)
+            Reshape, GlobalAveragePooling2D, GaussianNoise)
 from tensorflow.python.keras.models import Model
 from model_utils import ConvBnLRelu
 from sample_layer import SampleLayer
@@ -31,17 +31,20 @@ class Darknet19Encoder(Architecture):
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(64, kernelSize=3)(net, training=self.training) # 2
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
+        net = GaussianNoise(0.2)(net)
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training) # 3
         net = ConvBnLRelu(64, kernelSize=1)(net, training=self.training) # 4
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training) # 5
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training) # 6
         net = ConvBnLRelu(128, kernelSize=1)(net, training=self.training) # 7
+        net = GaussianNoise(0.3)(net)
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training) # 8
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 9
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training) # 10
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 11
+        net = GaussianNoise(0.3)(net)
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training) # 12
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 13
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
@@ -49,6 +52,7 @@ class Darknet19Encoder(Architecture):
         net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training) # 15
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training) # 16
         net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training) # 17
+        net = GaussianNoise(0.2)(net)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training) # 18
         mean = Conv2D(filters=self.latentSize, kernel_size=(1, 1),
                       padding='same')(net)
