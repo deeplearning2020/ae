@@ -2,7 +2,8 @@ import tensorflow as tf
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras import backend as K
 from keras.callbacks import EarlyStopping
-import os
+from keras.callbacks import LearningRateScheduler
+import os, math
 import numpy as np
 from PIL import Image
 from tensorflow.python.keras.preprocessing.image import load_img
@@ -14,6 +15,13 @@ class AutoEncoder(object):
         self.encoder = encoderArchitecture.model
         self.decoder = decoderArchitecture.model
         self.ae = Model(self.encoder.inputs, self.decoder(self.encoder.outputs))
+
+def step_decay(epoch):
+	initial_lrate = 0.1
+	drop = 0.5
+	epochs_drop = 50.0
+	lrate = initial_lrate * math.pow(drop, math.floor((1+epoch)/epochs_drop))
+	return lrate
 
 def test():
     inputShape = (256, 256, 3)
@@ -28,9 +36,10 @@ def test():
     bvae = AutoEncoder(encoder, decoder)
     bvae.ae.compile(optimizer = 'adam', loss = 'mse')
     es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1,patience = 50)
+    lrate = LearningRateScheduler(step_decay)
     bvae.ae.fit(img, img,
                 epochs=5000,
-                batch_size=batchSize,callbacks = [es])
+                batch_size=batchSize,callbacks = [es, lrate])
     latentVec = bvae.encoder.predict(img)[0]
     pred = bvae.ae.predict(img)
     pred = np.uint8((pred + 1)* 255/2)
