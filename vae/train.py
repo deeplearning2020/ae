@@ -28,9 +28,11 @@ def test():
     inputShape = (256, 256, 3)
     batchSize = 8
     latentSize = 100
+    print(os.getcwd())
     img = load_img(os.path.join(os.path.dirname(__file__), '..','images', 'img.jpg'), target_size=inputShape[:-1])
     img = np.array(img, dtype=np.float32) * (2/255) - 1
     img = np.array([img]*batchSize)
+    print(os.getcwd())
     new_img = load_img(os.path.join(os.path.dirname(__file__), '..','cropped', 'img.jpg'), target_size=inputShape[:-1])
     new_img = np.array(new_img, dtype=np.float32) * (2/255) - 1
     new_img = np.array([new_img]*batchSize)
