@@ -40,7 +40,7 @@ def test():
     es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1, patience = 50)
     bvae.ae.fit(img, img,
                 epochs=5000,
-                batch_size=batchSize,callbacks = [es, rlrop])
+                batch_size=batchSize,callbacks = [rlrop, es])
     latentVec = bvae.encoder.predict(img)[0]
     pred = bvae.ae.predict(img)
     pred = np.uint8((pred + 1)* 255/2)
