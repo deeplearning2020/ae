@@ -64,7 +64,7 @@ class Darknet19Encoder(Architecture):
         return Model(inputs=inLayer, outputs=sample)
 
 class Darknet19Decoder(Architecture):
-    def __init__(self, inputShape=(256, 256, 3), batchSize=None, latentSize=1000, training=None):
+    def __init__(self, inputShape=(None, None, 3), batchSize=None, latentSize=1000, training=None):
         self.training=training
         super().__init__(inputShape, batchSize, latentSize)
 
