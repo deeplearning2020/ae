@@ -55,10 +55,10 @@ def test():
     #rlrop = ReduceLROnPlateau(monitor = 'loss', factor=0.1, patience = 100)
     es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1, patience = 50)
     bvae.ae.fit(img, new_img,
-                epochs=5000,
+                epochs=500,
                 batch_size=batchSize,callbacks = [es])
-    latentVec = bvae.encoder.predict(new_img)[0]
     bvae.ae.save('sr.h5')
+    latentVec = bvae.encoder.predict(new_img)[0]
     pred = bvae.ae.predict(new_img)
     pred = np.uint8((pred + 1)* 255/2)
     pred = Image.fromarray(pred[0])
