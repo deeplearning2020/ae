@@ -48,6 +48,7 @@ def test():
     latentVec = bvae.encoder.predict(new_img)[0]
     pred = bvae.ae.predict(new_img)
     pred = np.uint8((pred + 1)* 255/2)
+    print(pred.shape)
     pred = Image.fromarray(pred[0])
     pred.save("reconstructed_image.png")
     pred.show()
