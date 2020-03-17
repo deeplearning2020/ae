@@ -17,6 +17,18 @@ class AutoEncoder(object):
         self.decoder = decoderArchitecture.model
         self.ae = Model(self.encoder.inputs, self.decoder(self.encoder.outputs))
 
+def modcrop(img, scale):
+    tmpsz = img.shape
+    sz = tmpsz[0:2]
+    sz = sz - np.mod(sz, scale)
+    img = img[0:sz[0], 1:sz[1]]
+    return img
+
+
+def shave(image, border):
+    img = image[border: -border, border: -border]
+    return img
+
 def step_decay(epoch):
 	initial_lrate = 0.1
 	drop = 0.5
@@ -46,9 +58,9 @@ def test():
                 epochs=5000,
                 batch_size=batchSize,callbacks = [es])
     latentVec = bvae.encoder.predict(new_img)[0]
+    bvae.ae.save('sr.h5')
     pred = bvae.ae.predict(new_img)
     pred = np.uint8((pred + 1)* 255/2)
-    print(pred.shape)
     pred = Image.fromarray(pred[0])
     pred.save("reconstructed_image.png")
     pred.show()
