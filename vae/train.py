@@ -3,6 +3,7 @@ from tensorflow.python.keras.models import Model
 from tensorflow.python.keras import backend as K
 from keras.callbacks import EarlyStopping
 from keras.callbacks import LearningRateScheduler
+from keras.callbacks import ReduceLROnPlateau
 import os, math
 import numpy as np
 from PIL import Image
@@ -35,11 +36,11 @@ def test():
     decoder = Darknet19Decoder(inputShape, latentSize=latentSize)
     bvae = AutoEncoder(encoder, decoder)
     bvae.ae.compile(optimizer = 'adam', loss = 'mse')
-    es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1,patience = 50)
-    lrate = LearningRateScheduler(step_decay)
+    rlrop = ReduceLROnPlateau(monitor = 'loss', factor=0.1, patience = 100)
+    es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1, patience = 50)
     bvae.ae.fit(img, img,
                 epochs=5000,
-                batch_size=batchSize,callbacks = [es, lrate])
+                batch_size=batchSize,callbacks = [es, rlrop])
     latentVec = bvae.encoder.predict(img)[0]
     pred = bvae.ae.predict(img)
     pred = np.uint8((pred + 1)* 255/2)
