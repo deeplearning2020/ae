@@ -13,4 +13,3 @@ class ConvBnLRelu(object):
         net = BatchNormalization()(net, training=training)
         net = LeakyReLU()(net)
         return net
-

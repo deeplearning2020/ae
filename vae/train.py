@@ -1,6 +1,7 @@
 import tensorflow as tf
 from tensorflow.python.keras.models import Model
 from tensorflow.python.keras import backend as K
+from keras.callbacks import EarlyStopping
 import os
 import numpy as np
 from PIL import Image
@@ -25,10 +26,11 @@ def test():
     encoder = Darknet19Encoder(inputShape, latentSize=latentSize, latentConstraints='bvae', beta=69)
     decoder = Darknet19Decoder(inputShape, latentSize=latentSize)
     bvae = AutoEncoder(encoder, decoder)
-    bvae.ae.compile(optimizer='adam', loss='mse')
+    bvae.ae.compile(optimizer = 'adam', loss = 'mse')
+    es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1,patience = 50)
     bvae.ae.fit(img, img,
-                epochs=10000,
-                batch_size=batchSize)
+                epochs=5000,
+                batch_size=batchSize,callbacks = [es])
     latentVec = bvae.encoder.predict(img)[0]
     pred = bvae.ae.predict(img)
     pred = np.uint8((pred + 1)* 255/2)
