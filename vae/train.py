@@ -29,23 +29,25 @@ def test():
     batchSize = 8
     latentSize = 100
     img = load_img(os.path.join(os.path.dirname(__file__), '..','images', 'img.jpg'), target_size=inputShape[:-1])
-    img.show()
     img = np.array(img, dtype=np.float32) * (2/255) - 1
     img = np.array([img]*batchSize)
+    new_img = load_img(os.path.join(os.path.dirname(__file__), '..','cropped', 'img.jpg'), target_size=inputShape[:-1])
+    new_img = np.array(new_img, dtype=np.float32) * (2/255) - 1
+    new_img = np.array([new_img]*batchSize)
     encoder = Darknet19Encoder(inputShape, latentSize=latentSize, latentConstraints='bvae', beta=69)
     decoder = Darknet19Decoder(inputShape, latentSize=latentSize)
     bvae = AutoEncoder(encoder, decoder)
     bvae.ae.compile(optimizer = 'adam', loss = 'mse')
     #rlrop = ReduceLROnPlateau(monitor = 'loss', factor=0.1, patience = 100)
     es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1, patience = 50)
-    bvae.ae.fit(img, img,
+    bvae.ae.fit(img, new_img,
                 epochs=5000,
                 batch_size=batchSize,callbacks = [es])
-    latentVec = bvae.encoder.predict(img)[0]
-    pred = bvae.ae.predict(img)
+    latentVec = bvae.encoder.predict(new_img)[0]
+    pred = bvae.ae.predict(new_img)
     pred = np.uint8((pred + 1)* 255/2)
     pred = Image.fromarray(pred[0])
-    pred.save("reconstruced_image.png")
+    pred.save("reconstructed_image.png")
     pred.show()
 
 if __name__ == "__main__":
