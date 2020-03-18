@@ -88,7 +88,7 @@ class Darknet19Decoder(Architecture):
         net = BatchNormalization()(net, training=self.training)
         net = DeconvRelu(128, kernelSize=3)(net, training=self.training)
         net = DeconvRelu(64, kernelSize=3)(net, training=self.training)
-        net = ConvBnLRelu(64, kernelSize=3, strides = 1)(net, training=self.training)a
+        net = ConvBnLRelu(64, kernelSize=3, strides = 1)(net, training=self.training)
         net = BatchNormalization()(net, training = self.training)
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(32, kernelSize=3)(net, training=self.training)
