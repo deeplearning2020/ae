@@ -65,7 +65,7 @@ class Darknet19Decoder(Architecture):
         net = Reshape((1, 1, self.latentSize))(inLayer)
         net = UpSampling2D((self.inputShape[0]//32, self.inputShape[1]//32))(net)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training)
-        net = SelfAttention()(net, training = self.training)
+        net = SelfAttention(512)(net, training = self.training)
         net = BatchNormalization()(net, training = self.training)
         net = UpSampling2D((2,2))(net)
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training)
