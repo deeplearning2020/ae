@@ -28,7 +28,6 @@ class Darknet19Encoder(Architecture):
     def Build(self):
         inLayer = Input(self.inputShape, self.batchSize)
         net = ConvBnLRelu(32, kernelSize=3)(inLayer, training=self.training) # 1
-        net = SelfAttention(32)(net, training = self.training)
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(64, kernelSize=3)(net, training=self.training) # 2
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
@@ -71,7 +70,6 @@ class Darknet19Decoder(Architecture):
         net = ConvBnLRelu(64, kernelSize=3)(net, training=self.training)
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(32, kernelSize=3)(net, training=self.training)
-        net = SelfAttention(32)(net, training = self.training)
         net = Conv2D(filters=self.inputShape[-1], kernel_size=(1, 1),
                       padding='same', activation="tanh")(net)
         return Model(inLayer, net)
