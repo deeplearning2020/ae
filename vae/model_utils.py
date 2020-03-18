@@ -4,9 +4,9 @@ from tensorflow.python.keras.layers import (InputLayer, Conv2D, Conv2DTranspose,
             Reshape, GlobalAveragePooling2D, Layer)
 from tensorflow.python.keras import backend as K
 from tensorflow.python.keras.layers import InputSpec
-from tensorflow.python.keras.initializers import RandomNormal
+from tensorflow.python.keras.initializers import RandomNormal,glorot_uniform
 
-init = RandomNormal(stddev=0.02)
+init = glorot_uniform()
 class ConvBnLRelu(object):
     def __init__(self, filters, kernelSize, strides=1):
         self.filters = filters
