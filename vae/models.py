@@ -18,7 +18,7 @@ class Architecture(object):
         raise NotImplementedError('architecture must implement Build function')
 
 class Darknet19Encoder(Architecture):
-    def __init__(self, inputShape=(None, None, 3), batchSize=None,
+    def __init__(self, inputShape=(512, 512, 3), batchSize=None,
                  latentSize=1000, latentConstraints='bvae', beta=100., training=None):
         self.latentConstraints = latentConstraints
         self.beta = beta
@@ -64,14 +64,14 @@ class Darknet19Encoder(Architecture):
         return Model(inputs=inLayer, outputs=sample)
 
 class Darknet19Decoder(Architecture):
-    def __init__(self, inputShape=(None, None, 3), batchSize=None, latentSize=1000, training=None):
+    def __init__(self, inputShape=(512, 512, 3), batchSize=None, latentSize=1000, training=None):
         self.training=training
         super().__init__(inputShape, batchSize, latentSize)
 
     def Build(self):
         inLayer = Input([self.latentSize], self.batchSize)
         net = Reshape((1, 1, self.latentSize))(inLayer)
-        #net = UpSampling2D((self.inputShape[0]//32, self.inputShape[1]//32))(net)
+        net = UpSampling2D((self.inputShape[0]//32, self.inputShape[1]//32))(net)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training)
         net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training)
