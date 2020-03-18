@@ -35,20 +35,15 @@ class Darknet19Encoder(Architecture):
         net = GaussianNoise(0.2)(net)
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training) # 3
         net = SelfAttention(128)(net)
-        net = ConvBnLRelu(64, kernelSize=1)(net, training=self.training) # 4
-        net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training) # 5
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training) # 6
-        net = ConvBnLRelu(128, kernelSize=1)(net, training=self.training) # 7
         net = GaussianNoise(0.3)(net)
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training) # 8
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
-        net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 9
         net = GaussianNoise(0.3)(net)
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training) # 12
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 13
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
-        net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training) # 16
         net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training) # 17
         net = GaussianNoise(0.2)(net)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training) # 18
@@ -72,22 +67,16 @@ class Darknet19Decoder(Architecture):
         net = UpSampling2D((self.inputShape[0]//32, self.inputShape[1]//32))(net)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training)
         net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training)
-        net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training)
-        net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training)
-        net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training)
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training)
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training)
         net = SelfAttention(256)(net)
-        net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training)
-        net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training)
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training)
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training)
         net = ConvBnLRelu(64, kernelSize=1)(net, training=self.training)
         net = UpSampling2D((2,2))(net)
-        net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training)
-        net = UpSampling2D((2, 2))(net)
+        net = UpSampling2D((2,2))(net)
         net = ConvBnLRelu(64, kernelSize=3)(net, training=self.training)
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(32, kernelSize=3)(net, training=self.training)
