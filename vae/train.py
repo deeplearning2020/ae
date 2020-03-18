@@ -66,6 +66,7 @@ def test():
     print(pred.shape)
     pred = np.uint8((pred + 1)* 255/2)
     print(pred.shape)
+    """
     temp = new_img
     Y = np.zeros((1, temp.shape[0], temp.shape[1], 1), dtype=float)
     Y[0, :, :, 0] = temp[:, :, 0].astype(float) / 255
@@ -78,9 +79,10 @@ def test():
     output = cv2.cvtColor(temp, cv2.COLOR_RGB2BGR)
     ref = shave(ref.astype(np.uint8), 6)
     degraded = shave(degraded.astype(np.uint8), 6)
+    """
     pred = Image.fromarray(pred[0])
     pred.save("reconstructed_image.png")
-    cv2.imwrite("degraded.jpg",degraded)
+    #cv2.imwrite("degraded.jpg",degraded)
 
 if __name__ == "__main__":
     test()
