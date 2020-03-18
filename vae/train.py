@@ -61,8 +61,8 @@ def test():
                 epochs=5000,
                 batch_size=batchSize,callbacks = [es])
     #bvae.ae.save('sr.h5')
-    latentVec = bvae.encoder.predict(new_img)[0]
-    pred = bvae.ae.predict(new_img)
+    latentVec = bvae.encoder.predict(img)[0]
+    pred = bvae.ae.predict(img)
     print(pred.shape)
     pred = np.uint8((pred + 1)* 255/2)
     print(pred.shape)
