@@ -51,7 +51,7 @@ class Darknet19Encoder(Architecture):
         net = BatchNormalization()(net, training = self.training)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training)  # 13
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
-        net = ConvBnLRelu(1024, kernelSize=1)(
+        net = ConvBnLRelu(2048, kernelSize=5)(
             net, training=self.training)  # 17
         net = GaussianNoise(0.2)(net)
         net = BatchNormalization()(net, training = self.training)
@@ -76,7 +76,7 @@ class Darknet19Decoder(Architecture):
         net = Reshape((1, 1, self.latentSize))(inLayer)
         net = UpSampling2D(
             (self.inputShape[0]//32, self.inputShape[1]//32))(net)
-        net = DeconvRelu(1024, kernelSize=3)(net, training=self.training)
+        net = DeconvRelu(2048, kernelSize=5)(net, training=self.training)
         net = DeconvRelu(512, kernelSize=3, strides = 1)(net, training=self.training)
         net = SelfAttention(512)(net, training=self.training)
         net = BatchNormalization()(net, training=self.training)
