@@ -52,37 +52,20 @@ def test():
     bvae = AutoEncoder(encoder, decoder)
     bvae.ae.compile(optimizer = 'adam', loss = 'mse')
     #rlrop = ReduceLROnPlateau(monitor = 'loss', factor=0.1, patience = 100)
-    es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1, patience = 10)
+    es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1, patience = 30)
     # checkpoint
     #filepath = "best-model.hdf5"
     #checkpoint = ModelCheckpoint(filepath, monitor = 'loss', verbose = 1, save_best_only = True, mode = 'min')
     #callbacks_list = [checkpoint]
-    bvae.ae.fit(new_img, img,
+    bvae.ae.fit(img, new_img,
                 epochs=5000,
                 batch_size=batchSize,callbacks = [es])
     #bvae.ae.save('sr.h5')
     latentVec = bvae.encoder.predict(img)[0]
     pred = bvae.ae.predict(img)
-    print(pred.shape)
     pred = np.uint8((pred + 1)* 255/2)
-    print(pred.shape)
-    """
-    temp = new_img
-    Y = np.zeros((1, temp.shape[0], temp.shape[1], 1), dtype=float)
-    Y[0, :, :, 0] = temp[:, :, 0].astype(float) / 255
-    pred *= 255
-    pred[pred[:] > 255] = 255
-    pred[pred[:] < 0] = 0
-    pred = pred.astype(np.uint8)
-    temp = shave(temp, 6)
-    temp[:, :, ] = pre[:, :,0]
-    output = cv2.cvtColor(temp, cv2.COLOR_RGB2BGR)
-    ref = shave(ref.astype(np.uint8), 6)
-    degraded = shave(degraded.astype(np.uint8), 6)
-    """
     pred = Image.fromarray(pred[0])
     pred.save("reconstructed_image.png")
-    #cv2.imwrite("degraded.jpg",degraded)
 
 if __name__ == "__main__":
     test()

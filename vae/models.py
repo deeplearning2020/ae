@@ -4,7 +4,7 @@ from tensorflow.python.keras.layers import (InputLayer, Conv2D, Conv2DTranspose,
             BatchNormalization, LeakyReLU, MaxPool2D, UpSampling2D,
             Reshape, GlobalAveragePooling2D, GaussianNoise)
 from tensorflow.python.keras.models import Model
-from model_utils import ConvBnLRelu
+from model_utils import ConvBnLRelu, SelfAttention
 from sample_layer import SampleLayer
 
 class Architecture(object):
@@ -28,11 +28,13 @@ class Darknet19Encoder(Architecture):
     def Build(self):
         inLayer = Input(self.inputShape, self.batchSize)
         net = ConvBnLRelu(32, kernelSize=3)(inLayer, training=self.training) # 1
+        net = SelfAttention(32)(net)
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(64, kernelSize=3)(net, training=self.training) # 2
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = GaussianNoise(0.2)(net)
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training) # 3
+        net = SelfAttention(128)(net)
         net = ConvBnLRelu(64, kernelSize=1)(net, training=self.training) # 4
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training) # 5
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
@@ -40,6 +42,7 @@ class Darknet19Encoder(Architecture):
         net = ConvBnLRelu(128, kernelSize=1)(net, training=self.training) # 7
         net = GaussianNoise(0.3)(net)
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training) # 8
+        NET = SelfAttention(256)(net)
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 9
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training) # 10
@@ -80,6 +83,7 @@ class Darknet19Decoder(Architecture):
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training)
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training)
+        net = SelfAttention(256)(net)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training)
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training)
@@ -89,27 +93,18 @@ class Darknet19Decoder(Architecture):
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training)
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training)
+        net = SelfAttention(128)(net)
         net = ConvBnLRelu(64, kernelSize=1)(net, training=self.training)
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training)
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(64, kernelSize=3)(net, training=self.training)
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(32, kernelSize=3)(net, training=self.training)
+        net = SelfAttention(32)(net)
         net = ConvBnLRelu(64, kernelSize=1)(net, training=self.training)
         net = Conv2D(filters=self.inputShape[-1], kernel_size=(1, 1),
                       padding='same', activation="tanh")(net)
         return Model(inLayer, net)
-
-class Darknet53Encoder(Architecture):
-    def __init__(self, inputShape=(None, None, None, None), name='darkent53_encoder'):
-        super().__init__(inputShape, name)
-        self.Build()
-
-    def Build(self):
-        raise NotImplementedError('this architecture is not complete')
-
-    def ConvBlock(self):
-        raise NotImplementedError('this architecture is not complete')
 
 def test():
     d19e = Darknet19Encoder()
