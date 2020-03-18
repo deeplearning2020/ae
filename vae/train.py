@@ -52,7 +52,7 @@ def test():
     bvae = AutoEncoder(encoder, decoder)
     bvae.ae.compile(optimizer = 'adam', loss = 'mse')
     #rlrop = ReduceLROnPlateau(monitor = 'loss', factor=0.1, patience = 100)
-    es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1, patience = 50)
+    es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1, patience = 10)
     # checkpoint
     #filepath = "best-model.hdf5"
     #checkpoint = ModelCheckpoint(filepath, monitor = 'loss', verbose = 1, save_best_only = True, mode = 'min')
