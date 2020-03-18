@@ -36,9 +36,11 @@ class Darknet19Encoder(Architecture):
         net = ConvBnLRelu(64, kernelSize=3)(net, training=self.training)  # 2
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = GaussianNoise(0.2)(net)
+        net = BatchNormalization()(net,training = self.training)
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training)  # 3
         net = SelfAttention(128)(net, training=self.training)
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
+        net = BatchNormalization()(net, training = self.training)
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training)  # 6
         net = SelfAttention(256)(net, training=self.training)
         net = BatchNormalization()(net, training=self.training)
@@ -46,11 +48,13 @@ class Darknet19Encoder(Architecture):
         net = GaussianNoise(0.3)(net)
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = GaussianNoise(0.3)(net)
+        net = BatchNormalization()(net, training = self.training)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training)  # 13
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(1024, kernelSize=1)(
             net, training=self.training)  # 17
         net = GaussianNoise(0.2)(net)
+        net = BatchNormalization()(net, training = self.training)
         mean = Conv2D(filters=self.latentSize, kernel_size=(1, 1),
                       padding='same')(net)
         mean = GlobalAveragePooling2D()(mean)
@@ -84,7 +88,8 @@ class Darknet19Decoder(Architecture):
         net = BatchNormalization()(net, training=self.training)
         net = DeconvRelu(128, kernelSize=3)(net, training=self.training)
         net = DeconvRelu(64, kernelSize=3)(net, training=self.training)
-        net = ConvBnLRelu(64, kernelSize=3, strides = 1)(net, training=self.training)
+        net = ConvBnLRelu(64, kernelSize=3, strides = 1)(net, training=self.training)a
+        net = BatchNormalization()(net, training = self.training)
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(32, kernelSize=3)(net, training=self.training)
         net = Conv2D(filters=self.inputShape[-1], kernel_size=(1, 1),
