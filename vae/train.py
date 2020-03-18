@@ -54,16 +54,18 @@ def test():
     #rlrop = ReduceLROnPlateau(monitor = 'loss', factor=0.1, patience = 100)
     es = EarlyStopping(monitor = 'loss', mode = 'min', verbose = 1, patience = 50)
     # checkpoint
-    filepath = "best-model.hdf5"
-    checkpoint = ModelCheckpoint(filepath, monitor = 'loss', verbose = 1, save_best_only = True, mode='max')
-    callbacks_list = [checkpoint]
+    #filepath = "best-model.hdf5"
+    #checkpoint = ModelCheckpoint(filepath, monitor = 'loss', verbose = 1, save_best_only = True, mode = 'min')
+    #callbacks_list = [checkpoint]
     bvae.ae.fit(img, new_img,
                 epochs=500,
-                batch_size=batchSize,callbacks = [checkpoint, es])
+                batch_size=batchSize,callbacks = [es])
     #bvae.ae.save('sr.h5')
     latentVec = bvae.encoder.predict(new_img)[0]
     pred = bvae.ae.predict(new_img)
+    print(pred.shape)
     pred = np.uint8((pred + 1)* 255/2)
+    print(pred.shape)
     pred = Image.fromarray(pred[0])
     pred.save("reconstructed_image.png")
     pred.show()
