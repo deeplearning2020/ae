@@ -16,6 +16,15 @@ class ConvBnLRelu(object):
         net = Conv2D(self.filters, self.kernelSize,kernel_initializer = init,strides=self.strides, padding='same')(net)
         net = LeakyReLU()(net)
         return net
+class DeconvRelu(object):
+    def __init__(self, filters, kernelSize, strides=2):
+        self.filters = filters
+        self.kernelSize = kernelSize
+        self.strides = strides
+    def __call__(self, net, training=None):
+        net = Conv2DTranspose(self.filters, self.kernelSize,kernel_initializer = init,strides=self.strides, padding='same')(net)
+        net = LeakyReLU()(net)
+        return net
 
 class SelfAttention(Layer):
     def __init__(self, ch, **kwargs):

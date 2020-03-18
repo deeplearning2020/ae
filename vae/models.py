@@ -4,7 +4,7 @@ from tensorflow.python.keras.layers import (InputLayer, Conv2D, Conv2DTranspose,
             BatchNormalization, LeakyReLU, MaxPool2D, UpSampling2D,
             Reshape, GlobalAveragePooling2D, GaussianNoise, BatchNormalization)
 from tensorflow.python.keras.models import Model
-from model_utils import ConvBnLRelu, SelfAttention
+from model_utils import ConvBnLRelu, SelfAttention, DeconvRelu
 from sample_layer import SampleLayer
 
 class Architecture(object):
@@ -39,12 +39,13 @@ class Darknet19Encoder(Architecture):
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training) # 6
         net = SelfAttention(256)(net, training = self.training)
         net = BatchNormalization()(net, training = self.training)
+        net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) 
         net = GaussianNoise(0.3)(net)
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = GaussianNoise(0.3)(net)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 13
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
-        net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training) # 17
+        net = ConvBnLRelu(1024, kernelSize=1)(net, training=self.training) # 17
         net = GaussianNoise(0.2)(net)
         mean = Conv2D(filters=self.latentSize, kernel_size=(1, 1),
                       padding='same')(net)
@@ -64,17 +65,19 @@ class Darknet19Decoder(Architecture):
         inLayer = Input([self.latentSize], self.batchSize)
         net = Reshape((1, 1, self.latentSize))(inLayer)
         net = UpSampling2D((self.inputShape[0]//32, self.inputShape[1]//32))(net)
-        net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training)
+        net = DeconvRelu(1024, kernelSize=3)(net, training=self.training)
+        net = DeconvRelu(512, kernelSize=3)(net, training=self.training)
         net = SelfAttention(512)(net, training = self.training)
         net = BatchNormalization()(net, training = self.training)
-        net = UpSampling2D((2,2))(net)
+        #net = UpSampling2D((2,2))(net)
+        net = DeconvRelu(512, kernelSize=3)(net, training=self.training)
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training)
         net = UpSampling2D((2, 2))(net)
-        net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training)
+        net = DeconvRelu(128, kernelSize=3)(net, training=self.training)
         net = SelfAttention(128)(net, training = self.training)
         net = BatchNormalization()(net, training = self.training)
-        net = UpSampling2D((2,2))(net)
-        net = UpSampling2D((2,2))(net)
+        net = DeconvRelu(128, kernelSize=3)(net, training=self.training)
+	net = DeconvRelu(64, kernelSize=3)(net, training=self.training)
         net = ConvBnLRelu(64, kernelSize=3)(net, training=self.training)
         net = UpSampling2D((2, 2))(net)
         net = ConvBnLRelu(32, kernelSize=3)(net, training=self.training)
