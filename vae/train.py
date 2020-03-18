@@ -41,10 +41,10 @@ def test():
     inputShape = (None, None, 3)
     batchSize = 8
     latentSize = 100
-    img = load_img(os.path.join(os.path.dirname(__file__), '..','images', 'img.jpg'), target_size=inputShape[:-1])
+    img = load_img(os.path.join(os.path.dirname(__file__), '..','images', 'img.jpg'))
     img = np.array(img, dtype=np.float32) * (2/255) - 1
     img = np.array([img]*batchSize)
-    new_img = load_img(os.path.join(os.getcwd(),'cropped', 'img.jpg'), target_size=inputShape[:-1])
+    new_img = load_img(os.path.join(os.getcwd(),'cropped', 'img.jpg'))
     new_img = np.array(new_img, dtype=np.float32) * (2/255) - 1
     new_img = np.array([new_img]*batchSize)
     encoder = Darknet19Encoder(inputShape, latentSize=latentSize, latentConstraints='bvae', beta=69)
