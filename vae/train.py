@@ -39,7 +39,7 @@ def step_decay(epoch):
 
 def test():
     inputShape = (512, 512, 3)
-    batchSize = 8
+    batchSize = 4
     latentSize = 100
     img = load_img(os.path.join(os.path.dirname(__file__), '..','images', 'img.png'),target_size=inputShape[:-1])
     img = np.array(img, dtype=np.float32) * (2/255) - 1
