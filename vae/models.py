@@ -71,7 +71,7 @@ class Darknet19Decoder(Architecture):
     def Build(self):
         inLayer = Input([self.latentSize], self.batchSize)
         net = Reshape((1, 1, self.latentSize))(inLayer)
-        net = UpSampling2D((self.inputShape[0]//32, self.inputShape[1]//32))(net)
+        #net = UpSampling2D((self.inputShape[0]//32, self.inputShape[1]//32))(net)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training)
         net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training)
