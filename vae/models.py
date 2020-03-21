@@ -48,11 +48,12 @@ class Darknet19Encoder(Architecture):
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training) # 12
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 13
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
+        net = GaussianNoise(0.5)(net)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training) # 14
         net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training) # 15
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training) # 16
         net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training) # 17
-        net = GaussianNoise(0.2)(net)
+        net = GaussianNoise(0.4)(net)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training) # 18
         mean = Conv2D(filters=self.latentSize, kernel_size=(1, 1),
                       padding='same')(net)
