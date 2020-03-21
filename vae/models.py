@@ -31,29 +31,29 @@ class Darknet19Encoder(Architecture):
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(64, kernelSize=3)(net, training=self.training) # 2
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
-        net = GaussianNoise(0.2)(net)
+        net = GaussianNoise(0.3)(net)
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training) # 3
         net = ConvBnLRelu(64, kernelSize=1)(net, training=self.training) # 4
         net = ConvBnLRelu(128, kernelSize=3)(net, training=self.training) # 5
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training) # 6
         net = ConvBnLRelu(128, kernelSize=1)(net, training=self.training) # 7
-        net = GaussianNoise(0.3)(net)
+        net = GaussianNoise(0.1)(net)
         net = ConvBnLRelu(256, kernelSize=3)(net, training=self.training) # 8
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 9
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training) # 10
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 11
-        net = GaussianNoise(0.3)(net)
+        net = GaussianNoise(0.1)(net)
         net = ConvBnLRelu(256, kernelSize=1)(net, training=self.training) # 12
         net = ConvBnLRelu(512, kernelSize=3)(net, training=self.training) # 13
         net = MaxPool2D((2, 2), strides=(2, 2))(net)
-        net = GaussianNoise(0.5)(net)
+        net = GaussianNoise(0.1)(net)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training) # 14
         net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training) # 15
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training) # 16
         net = ConvBnLRelu(512, kernelSize=1)(net, training=self.training) # 17
-        net = GaussianNoise(0.4)(net)
+        net = GaussianNoise(0.1)(net)
         net = ConvBnLRelu(1024, kernelSize=3)(net, training=self.training) # 18
         mean = Conv2D(filters=self.latentSize, kernel_size=(1, 1),
                       padding='same')(net)
