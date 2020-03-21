@@ -14,6 +14,7 @@ class ConvBnLRelu(object):
         self.strides = strides
     def __call__(self, net, training=None):
         net = Conv2D(self.filters, self.kernelSize,kernel_initializer = init,strides=self.strides, padding='same')(net)
+        net = BatchNormalization()(net, training = self.training)
         net = LeakyReLU()(net)
         return net
 class DeconvRelu(object):
