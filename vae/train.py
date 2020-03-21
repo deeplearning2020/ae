@@ -40,7 +40,7 @@ def step_decay(epoch):
 def test():
     inputShape = (256, 256, 3)
     batchSize = 8
-    latentSize = 100
+    latentSize = 400
     img = load_img(os.path.join(os.getcwd(), 'images', 'img.bmp'),target_size=inputShape[:-1])
     img = np.array(img, dtype=np.float32) * (2/255) - 1
     img = np.array([img]*batchSize)
@@ -57,12 +57,12 @@ def test():
     #filepath = "best-model.hdf5"
     #checkpoint = ModelCheckpoint(filepath, monitor = 'loss', verbose = 1, save_best_only = True, mode = 'min')
     #callbacks_list = [checkpoint]
-    bvae.ae.fit(new_img,img,
+    bvae.ae.fit(new_img,new_img,
                 epochs=2000,
                 batch_size=batchSize,callbacks = [es])
     #bvae.ae.save('sr.h5')
     latentVec = bvae.encoder.predict(img)[0]
-    pred = bvae.ae.predict(img)
+    pred = bvae.ae.predict(new_img)
     pred = np.uint8((pred + 1)* 255/2)
     pred = Image.fromarray(pred[0])
     pred.save("reconstructed_image.png")
