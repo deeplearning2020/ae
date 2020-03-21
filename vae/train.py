@@ -58,7 +58,7 @@ def test():
     #checkpoint = ModelCheckpoint(filepath, monitor = 'loss', verbose = 1, save_best_only = True, mode = 'min')
     #callbacks_list = [checkpoint]
     bvae.ae.fit(new_img,img,
-                epochs=5000,
+                epochs=2000,
                 batch_size=batchSize,callbacks = [es])
     #bvae.ae.save('sr.h5')
     latentVec = bvae.encoder.predict(img)[0]
