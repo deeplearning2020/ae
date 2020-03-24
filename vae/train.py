@@ -59,7 +59,7 @@ def test():
     #checkpoint = ModelCheckpoint(filepath, monitor = 'loss', verbose = 1, save_best_only = True, mode = 'min')
     #callbacks_list = [checkpoint]
     history = bvae.ae.fit(img,new_img,
-                epochs=100,
+                epochs=1700,
                 batch_size=batchSize,callbacks = [es])
     #bvae.ae.save('sr.h5')
     latentVec = bvae.encoder.predict(img)[0]
@@ -68,9 +68,9 @@ def test():
     pred = Image.fromarray(pred[0])
     pred.save("reconstructed_image.png")
     plt.plot(history.history['loss'])
-    plt.title('Training loss on a SET12 image sample')
-    plt.ylabel('loss')
-    plt.xlabel('epoch')
+    plt.title('Reconstruction loss on a SET12 image sample')
+    plt.ylabel('Training Loss')
+    plt.xlabel('Epoch')
     plt.legend(['Train'], loc='upper left')
     plt.savefig("loss.pdf")
 
