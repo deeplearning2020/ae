@@ -10,6 +10,7 @@ import numpy as np
 from PIL import Image
 from tensorflow.python.keras.preprocessing.image import load_img
 from models import Darknet19Encoder, Darknet19Decoder
+from matplotlib import pyplot as plt
 
 class AutoEncoder(object):
     def __init__(self, encoderArchitecture, 
