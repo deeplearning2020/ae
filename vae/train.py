@@ -67,12 +67,14 @@ def test():
     pred = np.uint8((pred + 1)* 255/2)
     pred = Image.fromarray(pred[0])
     pred.save("reconstructed_image.png")
+    """
     plt.plot(history.history['loss'])
     plt.title('Reconstruction loss on a SET12 image sample')
     plt.ylabel('Training Loss')
     plt.xlabel('Epoch')
-    plt.legend(['Train'], loc='upper left')
+    plt.legend(['Train'], loc='lower right')
     plt.savefig("loss.pdf")
+    """
 
 if __name__ == "__main__":
     test()
