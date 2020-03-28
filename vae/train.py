@@ -43,9 +43,11 @@ def test():
     batchSize = 8
     latentSize = 400
     img = load_img(os.path.join(os.getcwd(),'img.bmp'),target_size=inputShape[:-1])
+    print(img)
     img = np.array(img, dtype=np.float32) * (2/255) - 1
     img = np.array([img]*batchSize)
     new_img = load_img(os.path.join(os.getcwd(),'cropped.bmp'),target_size=inputShape[:-1])
+    print(new_img)
     new_img = np.array(new_img, dtype=np.float32) * (2/255) - 1
     new_img = np.array([new_img]*batchSize)
     encoder = Darknet19Encoder(inputShape, latentSize=latentSize, latentConstraints='bvae', beta=69)

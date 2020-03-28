@@ -15,8 +15,8 @@ class SampleLayer(Layer):
             raise Exception('input shape is not a vector [batchSize, latentSize]')
         mean = x[0]
         logvar = x[1]
-        if mean.shape[0].value == None or  logvar.shape[0].value == None:
-            return mean + 0*logvar # Keras needs the *0 so the gradinent is not None
+        #if mean.shape[0].value == None or  logvar.shape[0].value == None:
+            #return mean + 0*logvar # Keras needs the *0 so the gradinent is not None
         if self.reg is not None:
             latent_loss = -0.5 * (1 + logvar
                                 - K.square(mean)
