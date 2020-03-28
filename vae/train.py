@@ -39,7 +39,7 @@ def step_decay(epoch):
 	return lrate
 
 def test():
-    inputShape = (512, 512, 3)
+    inputShape = (256, 256, 3)
     batchSize = 8
     latentSize = 400
     img = load_img(os.path.join(os.getcwd(), 'images', 'img.bmp'),target_size=inputShape[:-1])
