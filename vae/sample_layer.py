@@ -16,13 +16,13 @@ class SampleLayer(Layer):
         mean = x[0]
         logvar = x[1]
         if mean.shape[0].value == None or  logvar.shape[0].value == None:
-            return mean + 0*logvar
+            return mean + 0*logvar # Keras needs the *0 so the gradinent is not None
         if self.reg is not None:
             latent_loss = -0.5 * (1 + logvar
                                 - K.square(mean)
                                 - K.exp(logvar))
-            latent_loss = K.sum(latent_loss, axis=-1)
-            latent_loss = K.mean(latent_loss, axis=0)
+            latent_loss = K.sum(latent_loss, axis=-1) # sum over latent dimension
+            latent_loss = K.mean(latent_loss, axis=0) # avg over batch
             latent_loss = self.beta * latent_loss
             self.add_loss(latent_loss, x)
 
@@ -32,7 +32,8 @@ class SampleLayer(Layer):
             stddev = K.exp(logvar*0.5)
             return mean + stddev * epsilon
 
-        return K.in_train_phase(reparameterization_trick, mean + 0*logvar, training=training)
+        return K.in_train_phase(reparameterization_trick, mean + 0*logvar, training=training) # TODO figure out why this is not working in the specified tf version???
 
     def compute_output_shape(self, input_shape):
         return input_shape[0]
+
