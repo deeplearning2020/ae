@@ -39,7 +39,7 @@ def step_decay(epoch):
 	return lrate
 
 def test():
-    inputShape = (256, 256, 3)
+    inputShape = (512, 512, 3)
     batchSize = 8
     latentSize = 400
     img = load_img(os.path.join(os.getcwd(), 'images', 'img.bmp'),target_size=inputShape[:-1])
@@ -59,10 +59,10 @@ def test():
     #checkpoint = ModelCheckpoint(filepath, monitor = 'loss', verbose = 1, save_best_only = True, mode = 'min')
     #callbacks_list = [checkpoint]
     history = bvae.ae.fit(img,new_img,
-                epochs=1700,
+                epochs=2000,
                 batch_size=batchSize,callbacks = [es])
     #bvae.ae.save('sr.h5')
-    latentVec = bvae.encoder.predict(img)[0]
+    latentVec = bvae.encoder.predict(new_img)[0]
     pred = bvae.ae.predict(new_img)
     pred = np.uint8((pred + 1)* 255/2)
     pred = Image.fromarray(pred[0])
