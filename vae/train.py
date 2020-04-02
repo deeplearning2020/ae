@@ -60,7 +60,7 @@ def test():
     #filepath = "best-model.hdf5"
     #checkpoint = ModelCheckpoint(filepath, monitor = 'loss', verbose = 1, save_best_only = True, mode = 'min')
     #callbacks_list = [checkpoint]
-    history = bvae.ae.fit(img,new_img,
+    history = bvae.ae.fit(new_img,img,
                 epochs=2000,
                 batch_size=batchSize,callbacks = [es])
     #bvae.ae.save('sr.h5')
