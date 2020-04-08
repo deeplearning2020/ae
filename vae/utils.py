@@ -4,7 +4,6 @@ from tensorflow.python.keras.layers import (InputLayer, Conv2D, Conv2DTranspose,
             Reshape, GlobalAveragePooling2D, Layer)
 from tensorflow.python.keras import backend as K
 from tensorflow.python.keras.layers import InputSpec
-from tensorflow.python.keras.initializers import RandomNormal,glorot_uniform
 
 class conv_block(object):
     def __init__(self, filters, kernelSize, strides=1):

@@ -34,7 +34,7 @@ def main():
 
 
 
-    encoder = vgg_encoder(inputShape, latentSize = latentSize, latentConstraints='bvae', beta=69)
+    encoder = vgg_encoder(inputShape, latentSize = latentSize, latentConstraints='bvae', beta = 69)
 
     decoder = vgg_decoder(inputShape, latentSize = latentSize)
 
