@@ -4,20 +4,11 @@ from tensorflow.python.keras.layers import (InputLayer, Conv2D, Conv2DTranspose,
             BatchNormalization, LeakyReLU, MaxPool2D, UpSampling2D,
             Reshape, GlobalAveragePooling2D, GaussianNoise)
 from tensorflow.python.keras.models import Model
-from model_utils import ConvBnLRelu
-from sample_layer import SampleLayer
+from utils import conv_block
+from layer import SampleLayer
 
-class Architecture(object):
-    def __init__(self, inputShape=None, batchSize=None, latentSize=None):
-        self.inputShape = inputShape
-        self.batchSize = batchSize
-        self.latentSize = latentSize
-        self.model = self.Build()
 
-    def Build(self):
-        raise NotImplementedError('architecture must implement Build function')
-
-class Darknet19Encoder(Architecture):
+class vgg_encoder(Architecture):
     def __init__(self, inputShape=(256, 256, 3), batchSize=None,
                  latentSize=1000, latentConstraints='bvae', beta=100., training=None):
         self.latentConstraints = latentConstraints
@@ -64,12 +55,12 @@ class Darknet19Encoder(Architecture):
         sample = SampleLayer(self.latentConstraints, self.beta)([mean, logvar], training=self.training)
         return Model(inputs=inLayer, outputs=sample)
 
-class Darknet19Decoder(Architecture):
+class vgg_decoder(Architecture):
     def __init__(self, inputShape=(256, 256, 3), batchSize=None, latentSize=1000, training=None):
         self.training=training
         super().__init__(inputShape, batchSize, latentSize)
 
-    def Build(self):
+    def build(self):
         inLayer = Input([self.latentSize], self.batchSize)
         net = Reshape((1, 1, self.latentSize))(inLayer)
         net = UpSampling2D((self.inputShape[0]//32, self.inputShape[1]//32))(net)
